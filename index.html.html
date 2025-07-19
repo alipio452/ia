@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>IA Matemática y Chat</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/12.4.0/math.min.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 40px;
+      background: #f0f0f0;
+    }
+    input, button {
+      padding: 10px;
+      font-size: 16px;
+      width: 300px;
+      margin: 10px 0;
+    }
+    #respuesta {
+      margin-top: 20px;
+      font-size: 18px;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+  <h1>IA Matemática + Respuestas</h1>
+  <a href="c:\Users\ESTUDIANTES\Downloads\Presentacion.docx.docx" download>Descargar informe Word</a>
+  <input type="text" id="pregunta" placeholder="Escribe tu pregunta">
+  <button onclick="responderPregunta()">Responder</button>
+  <div id="respuesta"></div>
+
+  <script>
+    function responderPregunta() {
+      const entrada = document.getElementById('pregunta').value.trim().toLowerCase();
+      const respuestaDiv = document.getElementById('respuesta');
+
+      try {
+        // Respuesta a saludo
+        if (entrada === "hola" || entrada === "¡hola!" || entrada === "buenas") {
+          respuestaDiv.innerText = "¡Hola! ¿En qué puedo ayudarte con matemáticas?";
+          return;
+        }
+
+        // Operaciones matemáticas simples
+        if (entrada.includes("cuánto es") || entrada.includes("cuanto es")) {
+          const expresion = entrada
+            .replace("¿", "")
+            .replace("?", "")
+            .replace("cuánto es", "")
+            .replace("cuanto es", "")
+            .trim();
+          const resultado = math.evaluate(expresion);
+          respuestaDiv.innerText = `El resultado de ${expresion} es ${resultado}`;
+          return;
+        }
+
+        // Ecuaciones simples con "="
+        if (entrada.includes("resolver")) {
+          const expresion = entrada.replace("resolver", "").trim();
+          const lados = expresion.split("=");
+
+          if (lados.length === 2) {
+            const variable = 'x'; // puedes hacer esto dinámico también
+            const eq = math.parse(`${lados[0]} - (${lados[1]})`);
+            const solucion = math.solve(eq, variable);
+            respuestaDiv.innerText = `La solución es: ${solucion}`;
+            return;
+          } else {
+            respuestaDiv.innerText = "No entendí bien la ecuación. Intenta algo como: Resolver x + 2 = 5";
+            return;
+          }
+        }
+
+        // Si no entiende la pregunta
+        respuestaDiv.innerText = "No entiendo la pregunta. Intenta algo como: 'Hola', '¿Cuánto es 2+2?' o 'Resolver x = 10'.";
+      } catch (error) {
+        respuestaDiv.innerText = "Ocurrió un error al procesar tu entrada.";
+      }
+    }
+  </script>
+</body>
+</html>
